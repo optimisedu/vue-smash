@@ -2,6 +2,11 @@
   <div>
     <h1>Smash a Light!</h1>
     <score-input @update="updateDesiredScore" />
+    <select v-model="difficulty" @change="changeDifficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
     <div class="lights">
       <light
         v-for="light in lights"
@@ -34,36 +39,15 @@ export default  {
   },
   data() {
     return {
-      lights: [
-        {
-          id: 'light-1',
-          isOn: false,
-        },
-        {
-          id: 'light-2',
-          isOn: false,
-        },
-        {
-          id: 'light-3',
-          isOn: false,
-        },
-        {
-          id: 'light-4',
-          isOn: false,
-        },
-        {
-          id: 'light-5',
-          isOn: false,
-        },
-      ],
-
+      difficulty: 'easy',
+      speed: 2000,
+      lights: Array(5).fill().map((_, i) => ({ id: `light-${i + 1}`, isOn: false })),
       score: 0,
-      desiredScore: 0, // Reintroduced desiredScore
+      desiredScore: 0,
     };
   },
   computed: {
     isGameOver() {
-      // Game is over if score reaches desiredScore
       return this.score >= this.desiredScore;
     },
   },
@@ -76,6 +60,10 @@ export default  {
       const light = this.lights[randomIndex];
       console.log(`Turning on light ${light.id}`);
       light.isOn = true;
+
+      setTimeout(() => {
+        light.isOn = false;
+      }, this.speed);
     },
     handleSmashed(light) {
       if (light.isOn) {
@@ -87,6 +75,22 @@ export default  {
         } else {
           alert('Game Over!');
         }
+      }
+    },
+    changeDifficulty() {
+      switch (this.difficulty) {
+        case 'easy':
+          this.lights = Array(5).fill().map((_, i) => ({ id: `light-${i + 1}`, isOn: false }));
+          this.speed = 2000;
+          break;
+        case 'medium':
+          this.lights = Array(10).fill().map((_, i) => ({ id: `light-${i + 1}`, isOn: false }));
+          this.speed = 1500;
+          break;
+        case 'hard':
+          this.lights = Array(15).fill().map((_, i) => ({ id: `light-${i + 1}`, isOn: false }));
+          this.speed = 1000;
+          break;
       }
     },
   },
