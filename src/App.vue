@@ -56,14 +56,20 @@ export default  {
       this.desiredScore = newScore;
     },
     turnOnRandomLight() {
-      const randomIndex = Math.floor(Math.random() * this.lights.length);
-      const light = this.lights[randomIndex];
-      console.log(`Turning on light ${light.id}`);
-      light.isOn = true;
+      console.log('turnOnRandomLight called');
+      if (this.isGameOver) {
+        this.resetGame();
+      } else {
+        this.lights.forEach(light => light.isOn = false);
+        const randomIndex = Math.floor(Math.random() * this.lights.length);
+        const light = this.lights[randomIndex];
+        console.log(`Turning on light ${light.id}`);
+        light.isOn = true;
 
-      setTimeout(() => {
-        light.isOn = false;
-      }, this.speed);
+        setTimeout(() => {
+          light.isOn = false;
+        }, this.speed);
+      }
     },
     handleSmashed(light) {
       if (light.isOn) {
@@ -77,6 +83,7 @@ export default  {
         }
       }
     },
+    //move to settings
     changeDifficulty() {
       switch (this.difficulty) {
         case 'easy':
